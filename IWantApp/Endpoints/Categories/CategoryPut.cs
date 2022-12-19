@@ -16,10 +16,12 @@ public class CategoryPut
         var category = context.Categories.Where(c => c.Id == id).FirstOrDefault();
 
         if(category == null)
-            return Results.NotFound();  
+            return Results.NotFound();
 
-        category.Name = categoryRequest.Name;
-        category.Active = categoryRequest.Active;
+        category.EditInfo(categoryRequest.Name, categoryRequest.Active);
+
+        if (!category.IsValid)
+            return Results.ValidationProblem(category.Notifications.ConvertToProblemDetails());
 
         context.SaveChanges();
 
