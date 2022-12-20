@@ -20,12 +20,15 @@ public class EmployeePost
         if (!result.Succeeded)
             return Results.BadRequest(result.Errors.First());
 
-        var claimResult= userManager.AddClaimAsync(user, new Claim("EmplyeeCode", employeeRequest.EmployeeCode)).Result;
+        var userClaims = new List<Claim>
+        {
+            new Claim("EmplyeeCode", employeeRequest.EmployeeCode),
+            new Claim("Name", employeeRequest.Name)
+        };
 
-        if (!claimResult.Succeeded)
-            return Results.BadRequest(result.Errors.First());
+        var claimResult = userManager.AddClaimsAsync(user, userClaims).Result;
 
-        claimResult = userManager.AddClaimAsync(user, new Claim("Name", employeeRequest.Name)).Result;
+        // var claimResult = userManager.AddClaimAsync(user, new Claim("Name", employeeRequest.Name)).Result; 1 claim por linha
 
         if (!claimResult.Succeeded)
             return Results.BadRequest(result.Errors.First());
