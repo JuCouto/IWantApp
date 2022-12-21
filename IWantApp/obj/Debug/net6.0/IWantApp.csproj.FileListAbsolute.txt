@@ -103,3 +103,10 @@ C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Microsoft.AspNetCore.Identity.EntityFra
 C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Microsoft.Extensions.Identity.Core.dll
 C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Microsoft.Extensions.Identity.Stores.dll
 C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Dapper.dll
+C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
+C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
+C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
+C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll

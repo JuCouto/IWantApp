@@ -1,5 +1,6 @@
 using IWantApp.Endpoints.Categories;
 using IWantApp.Endpoints.Employees;
+using IWantApp.Endpoints.Security;
 using IWantApp.Infra.Data;
 using Microsoft.AspNetCore.Identity;
 
@@ -12,8 +13,9 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.Password.RequireUppercase = false;
     options.Password.RequireLowercase = false;
     options.Password.RequiredLength = 3;
-})
-    .AddEntityFrameworkStores<ApplicationDbContext>(); // Adicionando o identity como serviço.
+}).AddEntityFrameworkStores<ApplicationDbContext>(); // Adicionando o identity como serviço.
+ builder.Services.AddScoped<QueryAllUsersWithClaimName>(); //chama o serviço da classe, para usar o Dapper.
+
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); // configuração para BD postgres reconhecer A DATA LOCAL.
 
 builder.Services.AddControllers();///////
@@ -40,6 +42,6 @@ app.MapMethods(CategoryGetAll.Template, CategoryGetAll.Methods, CategoryGetAll.H
 app.MapMethods(CategoryPut.Template, CategoryPut.Methods, CategoryPut.Handle);
 app.MapMethods(EmployeePost.Template, EmployeePost.Methods, EmployeePost.Handle);
 app.MapMethods(EmployeeGetAll.Template, EmployeeGetAll.Methods, EmployeeGetAll.Handle);
-
+app.MapMethods(TokenPost.Template, TokenPost.Methods, TokenPost.Handle);
 
 app.Run();

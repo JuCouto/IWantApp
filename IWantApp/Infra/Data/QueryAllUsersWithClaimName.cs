@@ -1,4 +1,8 @@
-﻿namespace IWantApp.Infra.Data;
+﻿using Dapper;
+using IWantApp.Endpoints.Employees;
+using Npgsql;
+
+namespace IWantApp.Infra.Data;
 
 public class QueryAllUsersWithClaimName
 {
@@ -10,15 +14,17 @@ public class QueryAllUsersWithClaimName
 	}
 
     // Método com DAPPER (não está fazendo a pesquisa)
-    //public IEnumerable<EmployeeResponse> Execute (int page, int? rows)
-    //{
+    public IEnumerable<EmployeeResponse> Execute(int page, int? rows)
+    {
+       
+        var db = new NpgsqlConnection(configuration["ConnectionString:IWantDb"]);
+        string query = "select \"Email\", \"ClaimValue\" as \"Name\" from \"AspNetUsers\" anu INNER " +
+            "JOIN \"AspNetUserClaims\" anuc " +
+            "ON anu.\"Id\" = anuc.\"UserId\" and \"ClaimType\" = \'Name\' ";
 
-    //    var db = new NpgsqlConnection(configuration["ConnectionString:IWantDb"]);
-    //    string query = @"select 'Email', 'ClaimValue' as Name from AspNetUsers anu INNER JOIN AspNetUserClaims anuc ON anu.Id = anuc.UserId and ClaimType = 'Name' order by name OFFSET(@page - 1) * @rows ROWS FETCH NEXT @rows ROWS ONLY";
+        return db.Query<EmployeeResponse>(query, new { page, rows }
+            );
 
-    //    var employees = db.Query<EmployeeResponse>(query, new {page, rows}
-    //        );
-
-    //    return Results.Ok(employees);
-    //}
+        //return Results.Ok(employees);
+    }
 }
