@@ -40,13 +40,17 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.90, )"
+            },
             "Flunt": {
               "target": "Package",
               "version": "[2.0.5, )"
             },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[6.0.6, )"
+              "version": "[6.0.9, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",

@@ -102,3 +102,4 @@ C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.KeyDe
 C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Microsoft.Extensions.Identity.Core.dll
 C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Microsoft.Extensions.Identity.Stores.dll
+C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Dapper.dll
