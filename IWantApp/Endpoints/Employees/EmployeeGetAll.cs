@@ -2,6 +2,7 @@
 using IWantApp.Domain.Products;
 using IWantApp.Endpoints.Employees;
 using IWantApp.Infra.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Npgsql;
@@ -17,6 +18,7 @@ public class EmployeeGetAll
     public static Delegate Handle => Action;
 
     // Método com DAPPER 
+    [Authorize(Policy = "EmployeePolicy")]
     public static IResult Action(int? page, int? rows, QueryAllUsersWithClaimName query)
     {
         return Results.Ok(query.Execute(page.Value, rows.Value));

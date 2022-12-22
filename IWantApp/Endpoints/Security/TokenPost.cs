@@ -1,4 +1,6 @@
 ﻿
+using IWantApp.Endpoints.Employees;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,25 +15,32 @@ public class TokenPost
     public static string[] Methods => new string[] { HttpMethod.Post.ToString() };
     public static Delegate Handle => Action;
 
+    [AllowAnonymous]
     public static IResult Action( LoginRequest loginRequest, UserManager<IdentityUser> userManager)
     {
         var user = userManager.FindByEmailAsync(loginRequest.Email).Result;
         if (user == null)
             Results.BadRequest();
-        if (!userManager.CheckPasswordAsync(user, loginRequest.Password).Result);
+        if (!userManager.CheckPasswordAsync(user, loginRequest.Password).Result)
         Results.BadRequest();
+
+        var claims = userManager.GetClaimsAsync(user).Result;
+        var subject = new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Email , loginRequest.Email),
+                new Claim(ClaimTypes.NameIdentifier , user.Id)
+            });
+        subject.AddClaims(claims);
 
         var key = Encoding.ASCII.GetBytes("A@fdErWfQQFGREKEIFjuiol53");
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new Claim[]
-            {
-                new Claim(ClaimTypes.Email , loginRequest.Email),
-            }),
+            Subject = subject,
             SigningCredentials =
             new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
             Audience = "IWantApp",
-            Issuer = "Issuer"
+            Issuer = "Issuer",
+            Expires = DateTime.UtcNow.AddSeconds(30)
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();

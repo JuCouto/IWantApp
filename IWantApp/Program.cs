@@ -2,7 +2,11 @@ using IWantApp.Endpoints.Categories;
 using IWantApp.Endpoints.Employees;
 using IWantApp.Endpoints.Security;
 using IWantApp.Infra.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddNpgsql<ApplicationDbContext>(builder.Configuration["ConnectionString:IWantDb"]);
@@ -14,7 +18,47 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.Password.RequireLowercase = false;
     options.Password.RequiredLength = 3;
 }).AddEntityFrameworkStores<ApplicationDbContext>(); // Adicionando o identity como serviço.
- builder.Services.AddScoped<QueryAllUsersWithClaimName>(); //chama o serviço da classe, para usar o Dapper.
+
+
+// Todas as rotas ficam protegidas, mesmo sem colocar o [Authorize]
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+    .RequireAuthenticatedUser()
+    .Build();
+    options.AddPolicy("EmplyeePolicy", p =>
+    p.RequireAuthenticatedUser().RequireClaim("EmplyeeCode"));
+
+    // Posso especificar  valor da policy para a autorização.
+    options.AddPolicy("Emplyee005Policy", p =>
+   p.RequireAuthenticatedUser().RequireClaim("EmplyeeCode", "005"));
+}
+);
+
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateActor = true,
+        ValidateAudience = true,
+        ValidateIssuer = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ClockSkew = TimeSpan.Zero,
+        ValidIssuer = builder.Configuration["JwtBearerTokenSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtBearerTokenSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+             Encoding.UTF8.GetBytes(builder.Configuration["JwtBearerTokenSettings:SecretKey"]))
+    };
+}
+);
+
+builder.Services.AddScoped<QueryAllUsersWithClaimName>(); //chama o serviço da classe, para usar o Dapper.
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); // configuração para BD postgres reconhecer A DATA LOCAL.
 
@@ -23,6 +67,7 @@ builder.Services.AddControllers();///////
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// O que inicia com app habilita o aplicativo para utilizar.
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -33,7 +78,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-////app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
 ////app.MapControllers();
 
