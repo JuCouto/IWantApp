@@ -1,5 +1,6 @@
 ﻿using IWantApp.Domain.Products;
 using IWantApp.Infra.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace IWantApp.Endpoints.Categories;
@@ -10,6 +11,7 @@ public class CategoryGetAll
     public static string[] Methods => new string[] { HttpMethod.Get.ToString() };
     public static Delegate Handle => Action;
 
+    [Authorize(Policy = "EmployeePolicy")]
     public static IResult Action(ApplicationDbContext context)
     {
         var categories = context.Categories.ToList();

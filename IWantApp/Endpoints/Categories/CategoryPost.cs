@@ -1,6 +1,8 @@
 ﻿using IWantApp.Domain.Products;
 using IWantApp.Infra.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.Security.Claims;
 
 namespace IWantApp.Endpoints.Categories;
 
@@ -10,13 +12,15 @@ public class CategoryPost
     public static string[] Methods => new string[] { HttpMethod.Post.ToString() };
     public static Delegate Handle => Action;
 
-    public static IResult Action(CategoryRequest categoryRequest, ApplicationDbContext context)
+    [Authorize(Policy = "EmployeePolicy")]
+    public static IResult Action(CategoryRequest categoryRequest,HttpContext http, ApplicationDbContext context)
     {
         // Validação normal, mas ficaria grandevalidar tudo.
-    //    if (string.IsNullOrEmpty(categoryRequest.Name))
-    //        return Results.BadRequest("Name is required");
+        //    if (string.IsNullOrEmpty(categoryRequest.Name))
+        //        return Results.BadRequest("Name is required");
 
-        var category = new Category(categoryRequest.Name, "teste", "teste");
+        var userId = http.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+        var category = new Category(categoryRequest.Name, userId, userId);
 
         // As validações vêm do contrato
         if (!category.IsValid)
