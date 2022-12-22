@@ -27,11 +27,11 @@ builder.Services.AddAuthorization(options =>
     .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
     .RequireAuthenticatedUser()
     .Build();
-    options.AddPolicy("EmplyeePolicy", p =>
+    options.AddPolicy("EmployeePolicy", p =>
     p.RequireAuthenticatedUser().RequireClaim("EmplyeeCode"));
 
     // Posso especificar  valor da policy para a autorização.
-    options.AddPolicy("Emplyee005Policy", p =>
+    options.AddPolicy("Employee005Policy", p =>
    p.RequireAuthenticatedUser().RequireClaim("EmplyeeCode", "005"));
 }
 );
