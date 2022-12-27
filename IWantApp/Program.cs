@@ -90,4 +90,11 @@ app.MapMethods(EmployeePost.Template, EmployeePost.Methods, EmployeePost.Handle)
 app.MapMethods(EmployeeGetAll.Template, EmployeeGetAll.Methods, EmployeeGetAll.Handle);
 app.MapMethods(TokenPost.Template, TokenPost.Methods, TokenPost.Handle);
 
+app.UseExceptionHandler("/error");
+app.Map("/error", (HttpContext http) =>
+{
+    return Results.Problem(title: "An error ocurred", statusCode: 500);
+});
+
+
 app.Run();

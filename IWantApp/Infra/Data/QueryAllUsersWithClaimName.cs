@@ -14,7 +14,7 @@ public class QueryAllUsersWithClaimName
 	}
 
     // Método com DAPPER (não está fazendo a pesquisa)
-    public IEnumerable<EmployeeResponse> Execute(int page, int? rows)
+    public async Task<IEnumerable<EmployeeResponse>> Execute(int page, int? rows)
     {
        
         var db = new NpgsqlConnection(configuration["ConnectionString:IWantDb"]);
@@ -22,7 +22,7 @@ public class QueryAllUsersWithClaimName
             "JOIN \"AspNetUserClaims\" anuc " +
             "ON anu.\"Id\" = anuc.\"UserId\" and \"ClaimType\" = \'Name\' ";
 
-        return db.Query<EmployeeResponse>(query, new { page, rows }
+        return await db.QueryAsync<EmployeeResponse>(query, new { page, rows }
             );
 
         //return Results.Ok(employees);
