@@ -21,7 +21,7 @@ public class EmployeeGetAll
     [Authorize(Policy = "EmployeePolicy")]
     public static async Task<IResult> Action(int? page, int? rows, QueryAllUsersWithClaimName query)
     {
-        var result = await query.Execute(page.Value, rows.Value);
+        var result = await query.Execute(page, rows);
         return Results.Ok(result);
     }
 

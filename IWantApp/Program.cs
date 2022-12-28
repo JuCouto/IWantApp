@@ -4,11 +4,33 @@ using IWantApp.Endpoints.Security;
 using IWantApp.Infra.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
+using Npgsql;
+using NpgsqlTypes;
+using Serilog;
+using Serilog.Sinks.PeriodicBatching;
+using Serilog.Sinks.PostgreSQL;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, configuration) =>
+{
+    var connectionString = context.Configuration.GetConnectionString("IWantDb");
+
+    configuration.WriteTo.PostgreSQL(connectionString, "LogAPI", needAutoCreateTable: true)
+    .WriteTo.Console()
+    .MinimumLevel.Information();
+
+    if (context.HostingEnvironment.IsProduction() == false)
+    {
+        configuration.WriteTo.Console().MinimumLevel.Information();
+    }
+});
+
 builder.Services.AddNpgsql<ApplicationDbContext>(builder.Configuration["ConnectionString:IWantDb"]);
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
@@ -90,9 +112,18 @@ app.MapMethods(EmployeePost.Template, EmployeePost.Methods, EmployeePost.Handle)
 app.MapMethods(EmployeeGetAll.Template, EmployeeGetAll.Methods, EmployeeGetAll.Handle);
 app.MapMethods(TokenPost.Template, TokenPost.Methods, TokenPost.Handle);
 
+
+// Filtro tratamento de erros.
 app.UseExceptionHandler("/error");
 app.Map("/error", (HttpContext http) =>
 {
+    var error = http.Features?.Get<IExceptionHandlerFeature>()?.Error;
+
+    if(error!= null)
+    {
+        if (error is NpgsqlException)
+            return Results.Problem(title: "Database out", statusCode: 500);
+    }
     return Results.Problem(title: "An error ocurred", statusCode: 500);
 });
 

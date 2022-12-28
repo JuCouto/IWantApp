@@ -110,3 +110,14 @@ C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
 C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
 C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
+C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Serilog.dll
+C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Serilog.AspNetCore.dll
+C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Serilog.Extensions.Hosting.dll
+C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Serilog.Extensions.Logging.dll
+C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Serilog.Formatting.Compact.dll
+C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Serilog.Settings.Configuration.dll
+C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Serilog.Sinks.Console.dll
+C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Serilog.Sinks.Debug.dll
+C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Serilog.Sinks.File.dll
+C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Serilog.Sinks.PeriodicBatching.dll
+C:\C#\IWantApp\IWantApp\bin\Debug\net6.0\Serilog.Sinks.PostgreSQL.dll
